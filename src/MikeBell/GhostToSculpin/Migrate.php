@@ -49,7 +49,8 @@ class Migrate extends Command
         }
     }
 
-    protected function writePost($post, $database) {
+    protected function writePost($post, $database)
+    {
         //Check if posts directory exists.
         if (!file_exists('posts')) {
             mkdir('posts', 0777, true);
@@ -68,7 +69,8 @@ class Migrate extends Command
         fclose($file);
     }
 
-    protected function parseTags($pid, $database) {
+    protected function parseTags($pid, $database)
+    {
         $tags = 'tags:' . PHP_EOL;
         foreach ($database->query('SELECT tag_id FROM posts_tags WHERE post_id = ' . $pid) as $row) {
             $tagname = $database->query('SELECT name FROM tags WHERE id = ' . $row['tag_id'])->fetch();
