@@ -39,18 +39,17 @@ class Migrate extends Command
     {
         $database = new \PDO('sqlite:'.$filepath);
         foreach ($database->query('SELECT * FROM posts') as $row) {
-//            var_dump($row);
             $post = new \stdClass();
             $post->title = $row['title'];
             $post->slug = $row['slug'];
-            //$post->tags = '';
             $post->content = $row['markdown'];
             $post->created = $row['created_at'];
-            $this->writePost($post);
+            $post->id = $row['id'];
+            $this->writePost($post, $database);
         }
     }
 
-    protected function writePost($post) {
+    protected function writePost($post, $database) {
         //Check if posts directory exists.
         if (!file_exists('posts')) {
             mkdir('posts', 0777, true);
@@ -60,7 +59,7 @@ class Migrate extends Command
         $content = '---' . PHP_EOL;
         $content .= 'title: ' . $post->title . PHP_EOL;
         $content .= 'slug: ' . $post->slug . PHP_EOL;
-//        $content += 'tags: ' . $post->slug . PHP_EOL;
+        $content .= $this->parseTags($post->id, $database);
         $content .= '---' . PHP_EOL;
         $content .= $post->content . PHP_EOL;
 
@@ -69,7 +68,14 @@ class Migrate extends Command
         fclose($file);
     }
 
-    protected function parseTags($pid) {
-
+    protected function parseTags($pid, $database) {
+        $tags = 'tags:' . PHP_EOL;
+        foreach ($database->query('SELECT tag_id FROM posts_tags WHERE post_id = ' . $pid) as $row) {
+            $tagname = $database->query('SELECT name FROM tags WHERE id = ' . $row['tag_id'])->fetch();
+            if (isset($tagname)) {
+                $tags .= '  - ' . $tagname['name'] . PHP_EOL;
+            }
+        }
+        return $tags;
     }
 }
