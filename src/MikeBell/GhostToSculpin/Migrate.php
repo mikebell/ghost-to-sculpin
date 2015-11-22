@@ -16,7 +16,7 @@ class Migrate extends Command
             ->setDescription('Run Ghost to Sculpin migrate')
             ->addArgument(
                 'dbpath',
-                InputArgument::OPTIONAL,
+                InputArgument::REQUIRED,
                 'Path to sqlite db.'
             )
         ;
