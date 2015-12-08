@@ -34,7 +34,7 @@ class Migrate extends Command
 
         $output->writeln($text);
     }
-    
+
     protected function migrate($filepath)
     {
         $database = new \PDO('sqlite:'.$filepath);
@@ -44,6 +44,7 @@ class Migrate extends Command
             $post->slug = $row['slug'];
             $post->content = $row['markdown'];
             $post->created = $row['created_at'];
+            $post->status = $row['status'];
             $post->id = $row['id'];
             $this->writePost($post, $database);
         }
@@ -60,6 +61,9 @@ class Migrate extends Command
         $content = '---' . PHP_EOL;
         $content .= 'title: ' . $post->title . PHP_EOL;
         $content .= 'slug: ' . $post->slug . PHP_EOL;
+        if ($post->status == 'draft') {
+          $content .= 'draft: true' . PHP_EOL;
+        }
         $content .= $this->parseTags($post->id, $database);
         $content .= '---' . PHP_EOL;
         $content .= $post->content . PHP_EOL;
