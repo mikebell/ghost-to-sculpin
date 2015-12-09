@@ -12,5 +12,4 @@
             "MikeBell\\GhostToSculpin\\": "src/MikeBell/GhostToSculpin"
         }
     },
-    "bin": ["g2s"]
 }
