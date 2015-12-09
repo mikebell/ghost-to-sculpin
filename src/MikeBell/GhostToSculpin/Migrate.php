@@ -28,8 +28,6 @@ class Migrate extends Command
         if ($filepath) {
             $this->migrate($filepath);
             $text = '<info>Migration successful</info>';
-        } else {
-            $text = '<error>Please specify a database to migrate.</error>';
         }
 
         $output->writeln($text);
