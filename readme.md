@@ -6,5 +6,5 @@ Convert your Ghost blog to Sculpin yaml files.
 
 #Install
 
-* ```composer install```
+* ```composer require mikebell/ghosttosculpin:dev-master```
 * ```./g2s migrate:run $pathtodb```
